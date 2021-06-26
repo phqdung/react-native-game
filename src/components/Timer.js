@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {normalize, numberPad} from '../utils/common';
+import {convertTimeStamp, normalize, numberPad} from '../utils/common';
 
 export default class Timer extends React.Component {
   constructor(props) {
@@ -15,10 +15,11 @@ export default class Timer extends React.Component {
   }
 
   render() {
-    const totalTime = this.state.timestamp / 1000;
-    const minute = Math.floor(totalTime / 60);
-    const second = Math.floor(totalTime % 60);
-    const milisecond = this.state.timestamp % 1000;
+    // const totalTime = this.state.timestamp / 1000;
+    // const minute = Math.floor(totalTime / 60);
+    // const second = Math.floor(totalTime % 60);
+    // const milisecond = this.state.timestamp % 1000;
+    const {minute, second, milisecond} = convertTimeStamp(this.state.timestamp);
     return (
       <View style={styles.container}>
         <Text style={styles.text}>{minute < 10 ? `0${minute}` : minute}</Text>
@@ -32,7 +33,6 @@ export default class Timer extends React.Component {
 
   updateTimestamp() {
     this.setState({timestamp: this.state.timestamp + 248});
-    //console.log(this.state.timestamp);
   }
 
   componentDidMount() {

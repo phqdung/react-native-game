@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {
   getHeight,
   getWidth,
@@ -23,7 +23,7 @@ const genCardSource = () => {
       id: makeid(5),
       tag: `card${index}`,
       image: images[`card${index}`],
-      imageDown: images.card0,
+      imageDown: images.back,
       isUp: false,
       isDelete: false,
     });
@@ -39,8 +39,10 @@ export default class MainScreen extends React.Component {
     super(props);
     this.state = {
       prevCard: null,
+      point: 0,
     };
     this.mounted = true;
+    this.timerLiftCard = null;
 
     this.setPrevCard = this.setPrevCard.bind(this);
     this.handleCheckCard = this.handleCheckCard.bind(this);
@@ -57,7 +59,7 @@ export default class MainScreen extends React.Component {
       var that = this;
 
       if (currentCard.state.tag !== this.state.prevCard.state.tag) {
-        setTimeout(() => {
+        this.timerLiftCard = setTimeout(() => {
           if (currentCard && that && that.mounted) {
             currentCard.handleClose();
             that.state.prevCard.handleClose();
@@ -65,11 +67,17 @@ export default class MainScreen extends React.Component {
           }
         }, 300);
       } else {
-        setTimeout(() => {
+        this.timerLiftCard = setTimeout(() => {
           if (that && currentCard && that.mounted && currentCard) {
             currentCard.removeCard();
             that.state.prevCard.removeCard();
             that.setPrevCard(null);
+
+            const newPoint = this.state.point + 1;
+            this.setState({point: newPoint});
+            if (newPoint === 12) {
+              this.props.onEndGame();
+            }
           }
         }, 300);
       }
@@ -95,6 +103,7 @@ export default class MainScreen extends React.Component {
 
   componentWillUnmount() {
     this.mounted = false;
+    clearTimeout(this.timerLiftCard);
   }
 }
 
@@ -104,6 +113,10 @@ const timerH = getHeight(80);
 const cardWidth = (screenWidth - 18 * gutterW) / 8;
 const cardHeight = (screenHeight - timerH - 8 * gutterH) / 3;
 
+console.log('width', screenWidth);
+console.log('gW', gutterW);
+console.log('cardWidth', cardWidth);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -111,11 +124,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingHorizontal: gutterW,
     paddingVertical: gutterH,
+    justifyContent: 'center',
   },
   card: {
     width: cardWidth,
     height: cardHeight,
     marginHorizontal: gutterW,
     marginVertical: gutterH,
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
   },
 });

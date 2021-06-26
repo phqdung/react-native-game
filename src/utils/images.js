@@ -1,6 +1,6 @@
 const images = {
   background: require('../assets/background.png'),
-  card0: require('../assets/card0.png'),
+  back: require('../assets/back.png'),
   card1: require('../assets/card1.png'),
   card2: require('../assets/card2.png'),
   card3: require('../assets/card3.png'),

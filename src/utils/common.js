@@ -65,6 +65,15 @@ const numberPad = (number, width) => {
   return number + ''; // always return a string
 };
 
+const convertTimeStamp = timestamp => {
+  const totalTime = timestamp / 1000;
+  const minute = Math.floor(totalTime / 60);
+  const second = Math.floor(totalTime % 60);
+  const milisecond = timestamp % 1000;
+
+  return {minute, second, milisecond};
+};
+
 export {
   screenWidth,
   screenHeight,
@@ -75,4 +84,5 @@ export {
   shuffle,
   makeid,
   numberPad,
+  convertTimeStamp,
 };
